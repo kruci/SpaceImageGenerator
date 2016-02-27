@@ -50,7 +50,7 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     }
 
     //nebs
-    std::uniform_real_distribution<float> a_distribution(0, 0.02);
+    std::uniform_real_distribution<float> a_distribution(0, 0.05);
     std::uniform_int_distribution<int> w_distribution(0, w);
     std::uniform_int_distribution<int> h_distribution(0, h);
 
