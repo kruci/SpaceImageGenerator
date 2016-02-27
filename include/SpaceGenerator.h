@@ -14,7 +14,6 @@ private:
     clock_t t;
     std::mt19937 rndgenerator;
     std::uniform_int_distribution<int> rnddistribution;
-    std::vector<bool> is_free;
 
     ALLEGRO_COLOR clWhite = al_map_rgb(255,255,255);
 public:
