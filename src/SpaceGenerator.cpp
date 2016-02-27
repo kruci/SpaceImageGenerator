@@ -3,7 +3,7 @@
 SpaceGenerator::SpaceGenerator(int width, int height, int smallstars, int bigstars, int nebullas,
                                std::vector<ALLEGRO_COLOR> &nebcolors)
     : w(width), h(height), ss(smallstars), bs(bigstars), neb(nebullas), nebc(nebcolors), rndgenerator(clock()),
-    rnddistribution(1,(width*height)/40), is_free(width*height, true)
+    rnddistribution(1,70000), is_free(width*height, true)
 {
     orig_flags = al_get_new_bitmap_flags();
     al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
