@@ -58,6 +58,7 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
         if(isfree[x][y] == true)
         {
             al_put_pixel(x, y, col);
+            //al_draw_filled_circle(x,y,1, col);
             isfree[x][y] = false;
             size_pixels--;
         }
@@ -86,9 +87,8 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     {
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
 
-        someshit(x, y, rand() % (w*h), al_map_rgb(rand()%20, 0,rand()%20));
-        //someshit(x, y, rand() % (w*h), al_map_rgba(rand()%256,rand()%256,rand()%256, 1));
-        //someshit(x, y, rand() % (w*h), al_premul_rgba(rand()%256,rand()%256,rand()%256, rand()%10));
+        someshit(x, y, rand() % (w*h), al_map_rgb(1+rand()%20, 1+rand()%20,1+rand()%20));
+        //someshit(x, y, rand() % (w*h), al_premul_rgba(1+rand()%255, 1+rand()%255,1+rand()%255, 1+rand()%25));
     }
 
     int r = 0;
@@ -105,11 +105,27 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
                 r = 1+ rand() % 2;
                 al_draw_filled_ellipse(a,b, 1 + rand() %2, 1 + rand() %2,clWhite);
                 al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r - rand()%2, al_map_rgb(255,255,255));
-                if(rand() % 2 == 0)
+                int rng = rand() % 3;
+                if(rng == 0)
                 {
                     r = rand() % 4;
                     al_draw_filled_circle(a, b, r, al_premul_rgba(255,255,150+rand()%10, 230 +rand()%15));
-                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4, al_premul_rgba(255,255,50+rand()%200, 230 +rand()%15));
+                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4,
+                                          al_premul_rgba(255,255,50+rand()%200, 230 +rand()%15));
+                }
+                else if(rng == 1)
+                {
+                    r = rand() % 4;
+                    al_draw_filled_circle(a, b, r, al_premul_rgba(255,204,153, 230 +rand()%15));
+                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4,
+                                          al_premul_rgba(255,204,153, 230 +rand()%15));
+                }
+                else if(rng == 2)
+                {
+                    r = rand() % 4;
+                    al_draw_filled_circle(a, b, r, al_premul_rgba(204,229,255, 230 +rand()%15));
+                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4,
+                                          al_premul_rgba(204,229,255, 230 +rand()%15));
                 }
             }
         }
@@ -127,7 +143,7 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
             xx = -1 + rand()%3;
             yy = -1 + rand()%3;
             al_draw_filled_circle(x, y, 1,al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
-
+            //al_put_pixel(x, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
             x += xx;
             y += yy;
         }
