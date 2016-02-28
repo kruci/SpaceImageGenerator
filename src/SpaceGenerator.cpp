@@ -105,6 +105,9 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
                 r = 1+ rand() % 2;
                 al_draw_filled_ellipse(a,b, 1 + rand() %2, 1 + rand() %2,clWhite);
                 al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r - rand()%2, al_map_rgb(255,255,255));
+                //glow
+                al_draw_filled_circle(a, b, r + 1+rand()%5, al_premul_rgba(255,255,255, 1 + rand() % 20));
+
                 int rng = rand() % 3;
                 if(rng == 0)
                 {
