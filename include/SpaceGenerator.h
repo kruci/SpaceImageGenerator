@@ -16,6 +16,8 @@ private:
     std::uniform_int_distribution<int> rnddistribution;
 
     ALLEGRO_COLOR clWhite = al_map_rgb(255,255,255);
+    void someshit(int x, int y, long size_pixels,ALLEGRO_COLOR col);
+    bool **isfree;
 public:
     int w, h;
     int ss, bs, neb;

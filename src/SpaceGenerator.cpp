@@ -9,6 +9,12 @@ SpaceGenerator::SpaceGenerator(int width, int height, int smallstars, int bigsta
     al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
     bmp = al_create_bitmap(w,h);
     al_set_new_bitmap_flags(orig_flags);
+
+    isfree = new bool*[w];
+    for (int i = 0; i < w; ++i)
+    {
+        isfree[i] = new bool[h];
+    }
 }
 
 SpaceGenerator::~SpaceGenerator()
@@ -17,19 +23,75 @@ SpaceGenerator::~SpaceGenerator()
         al_destroy_bitmap(bmp);
 }
 
+void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
+{
+    for (int a = 0; a < w; a++)
+    {
+            for (int b = 0; b < h; b++)
+            {
+                isfree[a][b] = true;
+            }
+    }
+
+    while(size_pixels > 0)
+    {
+        x += -1 + rand() %3;
+        y += -1 + rand() %3;
+        if(x < 0)
+        {
+            x = 0;
+        }
+        else if(x >= w)
+        {
+            x = w-1;
+        }
+
+        if(y < 0)
+        {
+            y = 0;
+        }
+        else if(y >= h)
+        {
+            y = h-1;
+        }
+
+        if(isfree[x][y] == true)
+        {
+            al_put_pixel(x, y, col);
+            isfree[x][y] = false;
+            size_pixels--;
+        }
+    }
+}
+
 ALLEGRO_BITMAP* SpaceGenerator::Generate()
 {
     refbmp = al_get_target_bitmap();
+    al_lock_bitmap(bmp,  al_get_bitmap_format(bmp), ALLEGRO_LOCK_WRITEONLY);
     al_set_target_bitmap(bmp);
 
     al_clear_to_color(al_map_rgb(255,255,255));
     al_draw_filled_rectangle(0,0,w,h, al_map_rgb(0,0,0));
+
+    std::uniform_real_distribution<float> a_distribution(0, 0.05);
+    std::uniform_int_distribution<int> w_distribution(0, w);
+    std::uniform_int_distribution<int> h_distribution(0, h);
 
     if(Progresscallback != nullptr)
     {
         Progresscallback(0);
     }
     //stars
+    for(int c = 0; c < rand() % 10; c++)
+    {
+        signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
+
+        someshit(x, y, rand() % (w*h), al_map_rgb(rand()%20, 0,rand()%20));
+        //someshit(x, y, rand() % (w*h), al_map_rgba(rand()%256,rand()%256,rand()%256, 1));
+        //someshit(x, y, rand() % (w*h), al_premul_rgba(rand()%256,rand()%256,rand()%256, rand()%10));
+    }
+
+    int r = 0;
     for(int a = 0;a < w;a++)
     {
         for(int b = 0;b < h;b++)
@@ -40,19 +102,21 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
             }
             if(Proc(bs) == true) //255,255,204
             {
-                al_draw_filled_circle(a, b, rand() % 2, clWhite);
+                r = 1+ rand() % 2;
+                al_draw_filled_ellipse(a,b, 1 + rand() %2, 1 + rand() %2,clWhite);
+                al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r - rand()%2, al_map_rgb(255,255,255));
                 if(rand() % 2 == 0)
                 {
-                    al_draw_filled_circle(a, b, rand() % 4, al_premul_rgba(255,255,204, 240 +rand()%15));
+                    r = rand() % 4;
+                    al_draw_filled_circle(a, b, r, al_premul_rgba(255,255,150+rand()%10, 230 +rand()%15));
+                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4, al_premul_rgba(255,255,50+rand()%200, 230 +rand()%15));
                 }
             }
         }
     }
 
     //nebs
-    std::uniform_real_distribution<float> a_distribution(0, 0.05);
-    std::uniform_int_distribution<int> w_distribution(0, w);
-    std::uniform_int_distribution<int> h_distribution(0, h);
+
 
     for(int c = 0; c < nebc.size(); c++)
     {
@@ -74,6 +138,7 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     }
 
     al_set_target_bitmap(refbmp);
+    al_unlock_bitmap(bmp);
     return bmp;
 }
 
