@@ -57,8 +57,8 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
 
         if(isfree[x][y] == true)
         {
-            al_put_pixel(x, y, col);
-            //al_draw_filled_circle(x,y,1, col);
+            //al_put_pixel(x, y, col);
+            al_draw_filled_circle(x,y,1, col);
             isfree[x][y] = false;
             size_pixels--;
         }
@@ -135,8 +135,6 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     }
 
     //nebs
-
-
     for(int c = 0; c < nebc.size(); c++)
     {
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
