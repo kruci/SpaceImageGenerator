@@ -337,6 +337,8 @@ int main(int argc, char **argv)
                     wd_md->md_active = false;
                     ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->I_added_new_widgets();
                     ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->Print();
+                    ((rGUI::InputField*)widgets[massgencheckb+2])->Set_text(std::to_string(nmbofimg - a-1));
+                    ((rGUI::InputField*)widgets[massgencheckb+2])->Print();
                     al_flip_display();
 
                     al_save_bitmap((savepath + "sig_img_" + std::to_string(a) + ".png").c_str(), space);
@@ -345,12 +347,21 @@ int main(int argc, char **argv)
             }
             else
             {
-                spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
-                    stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),
-                    ((rGUI::SlideBar*)widgets[sspoz])->value,
-                    ((rGUI::SlideBar*)widgets[bspoz])->value,
-                    ((rGUI::SlideBar*)widgets[nbpoz])->value,
-                    nebscbacols);
+                if(((rGUI::CheckBox*)widgets[massgencheckb+1])->selected == true)
+                {
+                    spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
+                        stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),rand() % 100,
+                        rand() % 100,rand() % 100,nebscbacols);
+                }
+                else
+                {
+                    spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
+                        stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),
+                        ((rGUI::SlideBar*)widgets[sspoz])->value,
+                        ((rGUI::SlideBar*)widgets[bspoz])->value,
+                        ((rGUI::SlideBar*)widgets[nbpoz])->value,
+                        nebscbacols);
+                }
                 spg->Progresscallback = Pbar_callback;
                 space = spg->Generate();
 
