@@ -140,6 +140,8 @@ int main(int argc, char **argv)
     widgets.push_back(new rGUI::Button(SCREEN_W - 110, SCREEN_H - 50, 100, 40, "Save", "Calibri.ttf", &tmh));
     ALLEGRO_FILECHOOSER *savediag = al_create_native_file_dialog("",
                         "Save that beautiful masterpiece", "*.*;*.bmp;*.png;*.jpg", ALLEGRO_FILECHOOSER_SAVE);
+    ALLEGRO_FILECHOOSER *savefolddiag = al_create_native_file_dialog("",
+                        "Save that beautiful masterpieces", "", ALLEGRO_FILECHOOSER_FOLDER);
 
     ///Small stars
     widgets.push_back(new rGUI::Label(SCREEN_W - 270, 10, 265, 40, "Small stars", "Calibri.ttf", 0, &tmh, false));
@@ -216,6 +218,22 @@ int main(int argc, char **argv)
     thmwh.c_text = al_map_rgb(0,50,200);
     pbar = new rGUI::ProgressBar(20, (SCREEN_H-40)/2.0f, 580, 40, 0, &thmwh, false);
 
+    ///Mass generating
+    thmwh.c_outline = al_map_rgb(150,150,150);
+    thmwh.roundx = 0;
+    thmwh.roundy = 0;
+    int massgencheckb = widgets.size() +3;
+    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 345,265, 35, "","Calibri.ttf",0,&tmh, false ));
+    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 345,90, 17, "Mass generate","Calibri.ttf",0,&tmh, false));
+    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 362,90, 18, "Randomize","Calibri.ttf",0,&tmh, false));
+    widgets.push_back(new rGUI::CheckBox(SCREEN_W - 180, 345, 17, 17, &thmwh, false));
+    widgets.push_back(new rGUI::CheckBox(SCREEN_W - 180, 362, 17, 18, &thmwh, false));
+    thmwh.roundx = 3;
+    thmwh.roundy = 3;
+    widgets.push_back(new rGUI::InputField(SCREEN_W - 150, 350, 60, 25, "Calibri.ttf", &thmwh, FPS, false));
+    ((rGUI::InputField*)(widgets[widgets.size()-1]))->Set_text("numb");
+    widgets.push_back(new rGUI::Button(SCREEN_W - 80, 350, 70, 25, "Save to", "Calibri.ttf", &tmh));
+    std::string savepath;
 
     float scale = 1.0f;
     while(1)
@@ -255,28 +273,101 @@ int main(int argc, char **argv)
                 spg = nullptr;
             }
             pbar->value = 0;
-            spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
-                                                     stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),
-                                                     ((rGUI::SlideBar*)widgets[sspoz])->value,
-                                                     ((rGUI::SlideBar*)widgets[bspoz])->value,
-                                                     ((rGUI::SlideBar*)widgets[nbpoz])->value,
-                                                     nebscbacols);
-            spg->Progresscallback = Pbar_callback;
-            space = spg->Generate();
 
-            if(((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size() > 0)
+            if(((rGUI::CheckBox*)widgets[massgencheckb])->selected == true)
             {
-                for(int h = 0;h < ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size();h++)
-                {
-                    delete ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[h];
-                }
-                ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.clear();
-            }
+                int nmbofimg = 1;
 
-            ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0, space, &tmh, false));
-            ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size()-1]->
+                try
+                {
+                    nmbofimg = stoi(((rGUI::InputField*)widgets[massgencheckb+2])->Get_text());
+                }
+                catch(std::invalid_argument invarg)
+                {
+                    nmbofimg = 1;
+                }
+
+                for(int a = 0; a < nmbofimg; a++)
+                {
+                    if(spg != nullptr)
+                    {
+                        delete spg;
+                        spg = nullptr;
+                    }
+                    pbar->value = 0;
+
+                    if(((rGUI::CheckBox*)widgets[massgencheckb+1])->selected == true)
+                    {
+                        nebscbacols.clear();
+                        int biter = rand() % 8;
+                        for(int b = 0; b < biter; b++)
+                        {
+                            nebscbacols.push_back(al_map_rgb(distribution(generator), distribution(generator), distribution(generator)));
+                        }
+
+                        spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
+                            stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),rand() % 100,
+                            rand() % 100,rand() % 100,nebscbacols);
+                        spg->Progresscallback = Pbar_callback;
+                        space = spg->Generate();
+                    }
+                    else
+                    {
+                        spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
+                            stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),
+                            ((rGUI::SlideBar*)widgets[sspoz])->value,
+                            ((rGUI::SlideBar*)widgets[bspoz])->value,
+                            ((rGUI::SlideBar*)widgets[nbpoz])->value,
+                            nebscbacols);
+                        spg->Progresscallback = Pbar_callback;
+                        space = spg->Generate();
+                    }
+
+                    if(((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size() > 0)
+                    {
+                        for(int h = 0; h < ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size(); h++)
+                        {
+                            delete ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[h];
+                        }
+                        ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.clear();
+                    }
+
+                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0, space, &tmh, false));
+                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size()-1]->
+                    wd_md->md_active = false;
+                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->I_added_new_widgets();
+                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->Print();
+                    al_flip_display();
+
+                    al_save_bitmap((savepath + "sig_img_" + std::to_string(a) + ".png").c_str(), space);
+                }
+
+            }
+            else
+            {
+                spg = new SpaceGenerator(stoi(((rGUI::InputField*)widgets[width_inpf_poz])->Get_text()),
+                    stoi(((rGUI::InputField*)widgets[hight_inpf_poz])->Get_text()),
+                    ((rGUI::SlideBar*)widgets[sspoz])->value,
+                    ((rGUI::SlideBar*)widgets[bspoz])->value,
+                    ((rGUI::SlideBar*)widgets[nbpoz])->value,
+                    nebscbacols);
+                spg->Progresscallback = Pbar_callback;
+                space = spg->Generate();
+
+                if(((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size() > 0)
+                {
+                    for(int h = 0; h < ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size(); h++)
+                    {
+                        delete ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[h];
+                    }
+                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.clear();
+                }
+
+                ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0, space, &tmh, false));
+                ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size()-1]->
                 wd_md->md_active = false;
-            ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->I_added_new_widgets();
+                ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->I_added_new_widgets();
+            }
         }
         else if(widgets[slidebar_R+6]->wd_md->md_just_clicked == true)
         {
@@ -297,7 +388,7 @@ int main(int argc, char **argv)
             al_show_native_file_dialog(display, savediag);
             if(al_get_native_file_dialog_count(savediag) != 0 && space != nullptr)
             {
-                std::string savepath = al_get_native_file_dialog_path(savediag, 0);
+                savepath = al_get_native_file_dialog_path(savediag, 0);
                 al_save_bitmap(savepath.c_str(), space);
             }
 
@@ -343,6 +434,16 @@ int main(int argc, char **argv)
             }
 
         }
+        else if(widgets[massgencheckb+3]->wd_md->md_just_clicked == true)
+        {
+            al_show_native_file_dialog(display, savefolddiag);
+            if(al_get_native_file_dialog_count(savefolddiag) != 0)
+            {
+                savepath = al_get_native_file_dialog_path(savefolddiag, 0);
+
+            }
+        }
+
         for(int a = 1;a < ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();)
         {
             if(((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets[a]->wd_md->md_just_clicked == true)
