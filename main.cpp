@@ -91,14 +91,16 @@ int main(int argc, char **argv)
         fprintf(stderr, "failed to create timer!\n");
         return -1;
     }
-
+    al_set_new_display_flags(ALLEGRO_OPENGL);
     display = al_create_display(SCREEN_W, SCREEN_H);
+    al_set_new_display_option(ALLEGRO_RENDER_METHOD, 1, ALLEGRO_REQUIRE);
     if(!display)
     {
         fprintf(stderr, "failed to create display!\n");
         al_destroy_timer(timer);
         return -1;
     }
+    al_set_new_bitmap_flags(ALLEGRO_VIDEO_BITMAP | ALLEGRO_NO_PRESERVE_TEXTURE | ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
 
     event_queue = al_create_event_queue();
     if(!event_queue)
@@ -405,7 +407,9 @@ int main(int argc, char **argv)
 
         }
         else if(widgets[slidebar_R]->wd_md->md_clicking == true || widgets[slidebar_R+2]->wd_md->md_clicking == true ||
-                widgets[slidebar_R+4]->wd_md->md_clicking == true)
+                widgets[slidebar_R+4]->wd_md->md_clicking == true ||
+                widgets[slidebar_R]->wd_md->md_clicked == true || widgets[slidebar_R+2]->wd_md->md_clicked == true ||
+                widgets[slidebar_R+4]->wd_md->md_clicked == true)
         {
             ((rGUI::InputField*)widgets[slidebar_R+1])->Set_text(std::to_string(((rGUI::SlideBar*)widgets[slidebar_R])->value));
             ((rGUI::InputField*)widgets[slidebar_R+3])->Set_text(std::to_string(((rGUI::SlideBar*)widgets[slidebar_R+2])->value));

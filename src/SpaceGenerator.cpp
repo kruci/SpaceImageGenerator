@@ -5,10 +5,10 @@ SpaceGenerator::SpaceGenerator(int width, int height, int smallstars, int bigsta
     : w(width), h(height), ss(smallstars), bs(bigstars), neb(nebullas), nebc(nebcolors), rndgenerator(clock()),
     rnddistribution(1,70000)
 {
-    orig_flags = al_get_new_bitmap_flags();
-    al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
+    //orig_flags = al_get_new_bitmap_flags();
+    //al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
     bmp = al_create_bitmap(w,h);
-    al_set_new_bitmap_flags(orig_flags);
+    //al_set_new_bitmap_flags(orig_flags);
 
     isfree = new bool*[w];
     for (int i = 0; i < w; ++i)
@@ -35,6 +35,11 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
 
     while(size_pixels > 0)
     {
+        /*if(rand() % size_pixels == 0)
+        {
+            col = al_premul_rgba(rand() %256,rand() %256,rand() %256,rand() %30);
+        }*/
+
         x += -1 + rand() %3;
         y += -1 + rand() %3;
         if(x < 0)
@@ -83,11 +88,13 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
         Progresscallback(0);
     }
     //stars
-    for(int c = 0; c < rand() % 10; c++)
+    int trash = rand() % 10;
+    for(int c = 0; c < trash; c++)
     {
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
 
-        someshit(x, y, rand() % (w*h), al_map_rgb(rand()%10, rand()%10,1+rand()%20));
+        //someshit(x, y, rand() % (w*h), al_map_rgb(rand()%10, rand()%10,1+rand()%20));
+        someshit(x, y, rand() % (w*h), al_map_rgb(rand()%15, rand()%15,1+rand()%30));
         //someshit(x, y, rand() % (w*h), al_premul_rgba(1+rand()%255, 1+rand()%255,1+rand()%255, 1+rand()%25));
     }
 
@@ -133,6 +140,15 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
             }
         }
     }
+    //trash = rand() % 3;
+    /*for(int c = 0; c < 1; c++)
+    {
+        signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
+
+        //someshit(x, y, rand() % (w*h), al_map_rgb(rand()%10, rand()%10,1+rand()%20));
+        //someshit(x, y, rand() % (w*h), al_premul_rgba(1+rand()%10, 1+rand()%10,1+rand()%250, 1+rand()%60));
+        someshit(x, y, (rand() % ( (w*h)/100)), al_premul_rgba(255,255,255, 1+rand()%120));
+    }*/
 
     //nebs
     for(int c = 0; c < nebc.size(); c++)
