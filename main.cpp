@@ -91,7 +91,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "failed to create timer!\n");
         return -1;
     }
-    al_set_new_display_flags(ALLEGRO_OPENGL);
+    al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_PROGRAMMABLE_PIPELINE);
     display = al_create_display(SCREEN_W, SCREEN_H);
     al_set_new_display_option(ALLEGRO_RENDER_METHOD, 1, ALLEGRO_REQUIRE);
     if(!display)

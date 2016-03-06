@@ -33,6 +33,8 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
             }
     }
 
+    //size_pixels = size_pixels/2;
+
     while(size_pixels > 0)
     {
         /*if(rand() % size_pixels == 0)
@@ -42,6 +44,8 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
 
         x += -1 + rand() %3;
         y += -1 + rand() %3;
+        /*x += -2 + rand() %5;
+        y += -2 + rand() %5;*/
         if(x < 0)
         {
             x = 0;
@@ -62,8 +66,8 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
 
         if(isfree[x][y] == true)
         {
-            //al_put_pixel(x, y, col);
-            al_draw_filled_circle(x,y,1, col);
+            al_put_pixel(x, y, col);
+            //al_draw_filled_circle(x,y,3, col);
             isfree[x][y] = false;
             size_pixels--;
         }
@@ -79,7 +83,7 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     al_clear_to_color(al_map_rgb(255,255,255));
     al_draw_filled_rectangle(0,0,w,h, al_map_rgb(0,0,0));
 
-    std::uniform_real_distribution<float> a_distribution(0, 0.05);
+    std::uniform_real_distribution<float> a_distribution(0, 0.05);//0, 0.05
     std::uniform_int_distribution<int> w_distribution(0, w);
     std::uniform_int_distribution<int> h_distribution(0, h);
 
@@ -94,7 +98,8 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
 
         //someshit(x, y, rand() % (w*h), al_map_rgb(rand()%10, rand()%10,1+rand()%20));
-        someshit(x, y, rand() % (w*h), al_map_rgb(rand()%15, rand()%15,1+rand()%30));
+        someshit(x, y, rand() % (w*h), al_map_rgb(rand()%12, rand()%12,1+rand()%26));
+        Progresscallback(c +1);
         //someshit(x, y, rand() % (w*h), al_premul_rgba(1+rand()%255, 1+rand()%255,1+rand()%255, 1+rand()%25));
     }
 
@@ -159,8 +164,13 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
         {
             xx = -1 + rand()%3;
             yy = -1 + rand()%3;
-            al_draw_filled_circle(x, y, 1,al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
-            //al_put_pixel(x, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
+            //al_draw_filled_circle(x, y, 1,al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
+            al_put_blended_pixel(x, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
+
+            al_put_blended_pixel(x-1, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
+            al_put_blended_pixel(x+1, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
+            al_put_blended_pixel(x, y-1, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
+            al_put_blended_pixel(x, y+1, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
             x += xx;
             y += yy;
         }
