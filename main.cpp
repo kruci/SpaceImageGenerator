@@ -91,7 +91,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "failed to create timer!\n");
         return -1;
     }
-    al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_PROGRAMMABLE_PIPELINE);
+    al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_PROGRAMMABLE_PIPELINE | ALLEGRO_RESIZABLE);
     display = al_create_display(SCREEN_W, SCREEN_H);
     al_set_new_display_option(ALLEGRO_RENDER_METHOD, 1, ALLEGRO_REQUIRE);
     if(!display)
@@ -206,12 +206,6 @@ int main(int argc, char **argv)
     nebullacolor_scba = widgets.size();
     widgets.push_back(new rGUI::ScrollableArea(SCREEN_W - 270, 390, 130, 185, 130, 185, &tmh, 15));
 
-    ///Bitmap scba
-    int bitmapscbapoz = widgets.size();
-    ALLEGRO_BITMAP *space = nullptr;
-    SpaceGenerator *spg = nullptr;
-    widgets.push_back(new rGUI::ScrollableArea(10,10, SCREEN_W - 300, SCREEN_H - 35, 1000, 1000, &tmh, 15));
-
     ///Progressbar
     thmwh.roundx = 3;
     thmwh.roundy = 3;
@@ -237,6 +231,12 @@ int main(int argc, char **argv)
     widgets.push_back(new rGUI::Button(SCREEN_W - 80, 350, 70, 25, "Save to", "Calibri.ttf", &tmh));
     std::string savepath;
 
+    ///Bitmap scba
+    int bitmapscbapoz = widgets.size();
+    ALLEGRO_BITMAP *space = nullptr;
+    SpaceGenerator *spg = nullptr;
+    widgets.push_back(new rGUI::ScrollableArea(10,10, SCREEN_W - 300, SCREEN_H - 35, 1000, 1000, &tmh, 15));
+
     float scale = 1.0f;
     while(1)
     {
@@ -253,6 +253,50 @@ int main(int argc, char **argv)
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
             break;
+        }
+        else if(ev.type == ALLEGRO_EVENT_DISPLAY_RESIZE)
+        {
+            int cw = ev.display.width - SCREEN_W;
+            int ch = ev.display.height - SCREEN_H;
+
+            if( cw >= 0 && ch >= 0)
+            {
+                for(int a = 0;a < (int)widgets.size();a++)
+                {
+                    if(a != bitmapscbapoz)
+                    {
+                        widgets[a]->Change_coords( widgets[a]->orig_x1 + cw, widgets[a]->orig_y1,
+                                                   widgets[a]->wd_width, widgets[a]->wd_height);
+                    }
+                }
+
+                widgets[bitmapscbapoz]->Change_coords(  widgets[bitmapscbapoz]->orig_x1,
+                                                        widgets[bitmapscbapoz]->orig_y1,
+                        abs(widgets[bitmapscbapoz]->orig_x1 - widgets[bitmapscbapoz]->orig_x2) + cw,
+                        abs(widgets[bitmapscbapoz]->orig_y1 - widgets[bitmapscbapoz]->orig_y2) + ch);
+
+                pbar->Change_coords(  pbar->orig_x1,
+                                (ev.display.height -pbar->wd_height)/2.0f,
+                        abs(pbar->orig_x1 - pbar->orig_x2) + cw,
+                        pbar->wd_height);
+            }
+            else
+            {
+                for(int a = 0;a < (int)widgets.size();a++)
+                {
+                    widgets[a]->Change_coords( widgets[a]->orig_x1, widgets[a]->orig_y1,
+                                                   widgets[a]->wd_width, widgets[a]->wd_height);
+                }
+                pbar->Change_coords( pbar->orig_x1, pbar->orig_y1,
+                                    abs(pbar->orig_x1 - pbar->orig_x2),
+                                    abs(pbar->orig_y1 - pbar->orig_y2));
+                widgets[bitmapscbapoz]->Change_coords(  widgets[bitmapscbapoz]->orig_x1,
+                                                        widgets[bitmapscbapoz]->orig_y1,
+                        abs(widgets[bitmapscbapoz]->orig_x1 - widgets[bitmapscbapoz]->orig_x2),
+                        abs(widgets[bitmapscbapoz]->orig_y1 - widgets[bitmapscbapoz]->orig_y2));
+            }
+
+            al_acknowledge_resize(display);
         }
 
         float aaa = 1;

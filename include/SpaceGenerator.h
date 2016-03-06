@@ -18,9 +18,12 @@ private:
     ALLEGRO_COLOR clWhite = al_map_rgb(255,255,255);
     void someshit(int x, int y, long size_pixels,ALLEGRO_COLOR col);
     bool **isfree;
+    void blank(int a);
 public:
     int w, h;
     int ss, bs, neb;
+    int max_bckground_it = 10;
+    int min_bckground_it = 0;
     std::vector<ALLEGRO_COLOR> nebc;
     ALLEGRO_BITMAP *bmp = nullptr;
 

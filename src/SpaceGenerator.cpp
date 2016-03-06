@@ -92,7 +92,7 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
         Progresscallback(0);
     }
     //stars
-    int trash = rand() % 10;
+    int trash = rand() % max_bckground_it + min_bckground_it;
     for(int c = 0; c < trash; c++)
     {
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
@@ -193,4 +193,9 @@ bool SpaceGenerator::Proc(int &chance_from0to100)
         return true;
     }
     return false;
+}
+
+void SpaceGenerator::blank(int a)
+{
+
 }
