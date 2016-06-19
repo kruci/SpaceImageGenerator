@@ -76,6 +76,7 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
 
 ALLEGRO_BITMAP* SpaceGenerator::Generate()
 {
+    time_t st = clock();
     refbmp = al_get_target_bitmap();
     al_lock_bitmap(bmp,  al_get_bitmap_format(bmp), ALLEGRO_LOCK_WRITEONLY);
     al_set_target_bitmap(bmp);
@@ -182,6 +183,9 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
 
     al_set_target_bitmap(refbmp);
     al_unlock_bitmap(bmp);
+
+    std::cout << ((float)clock() - (float)st)/(float)CLOCKS_PER_SEC << "s" << std::endl;
+
     return bmp;
 }
 

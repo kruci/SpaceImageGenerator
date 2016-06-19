@@ -236,6 +236,7 @@ int main(int argc, char **argv)
     ALLEGRO_BITMAP *space = nullptr;
     SpaceGenerator *spg = nullptr;
     widgets.push_back(new rGUI::ScrollableArea(10,10, SCREEN_W - 300, SCREEN_H - 35, 1000, 1000, &tmh, 15));
+    ((rGUI::ScrollableArea*)(widgets[widgets.size()-1]))->zoomable = true;
 
     float scale = 1.0f;
     while(1)
