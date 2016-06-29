@@ -125,8 +125,7 @@ int main(int argc, char **argv)
 
     al_start_timer(timer);
 
-    rGUI::mouse_state = new ALLEGRO_MOUSE_STATE;
-    rGUI::keyboard_state = new ALLEGRO_KEYBOARD_STATE;
+    rGUI::Init_rGUI(1,1,0,0);
 
     rGUI::Theme tmh;
     tmh.c_text = al_map_rgb(255,255,255);
@@ -146,19 +145,19 @@ int main(int argc, char **argv)
                         "Save that beautiful masterpieces", "", ALLEGRO_FILECHOOSER_FOLDER);
 
     ///Small stars
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 10, 265, 40, "Small stars", "Calibri.ttf", 0, &tmh, false));
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 10, 265, 40, "Small stars", "Calibri.ttf", 25, &tmh,(rGUI::bf_RESIZE_CONTENT | rGUI::bf_HAS_FRAME)));
     int sspoz =  widgets.size();
-    widgets.push_back(new rGUI::SlideBar(SCREEN_W - 115, 15, 100, 30, 0, 100, &tmh, false));
+    widgets.push_back(new rGUI::SlideBar(SCREEN_W - 115, 15, 100, 30, 0, 100, &tmh, (rGUI::bf_HORIZONTAL)));
 
     ///Big stars
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 60, 265, 40, "Big stars", "Calibri.ttf", 0, &tmh, false));
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 60, 265, 40, "Big stars", "Calibri.ttf", 25, &tmh, (rGUI::bf_RESIZE_CONTENT | rGUI::bf_HAS_FRAME)));
     int bspoz = widgets.size();
-    widgets.push_back(new rGUI::SlideBar(SCREEN_W - 115, 65, 100, 30, 0, 100, &tmh, false));
+    widgets.push_back(new rGUI::SlideBar(SCREEN_W - 115, 65, 100, 30, 0, 100, &tmh, (rGUI::bf_HORIZONTAL)));
 
     ///Nebulas
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 110, 265, 40, "Dust", "Calibri.ttf", 0, &tmh, false));
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 110, 265, 40, "Dust", "Calibri.ttf", 25, &tmh, (rGUI::bf_RESIZE_CONTENT | rGUI::bf_HAS_FRAME)));
     int nbpoz = widgets.size();
-    widgets.push_back(new rGUI::SlideBar(SCREEN_W - 115, 115, 100, 30, 0, 100, &tmh, false));
+    widgets.push_back(new rGUI::SlideBar(SCREEN_W - 115, 115, 100, 30, 0, 100, &tmh, (rGUI::bf_HORIZONTAL)));
 
     ///Nebulas Colors
     rGUI::Theme thmwh = tmh;
@@ -169,42 +168,42 @@ int main(int argc, char **argv)
     std::mt19937 generator (clock());
     std::uniform_int_distribution<int> distribution(0,255);
     int slidebar_R = widgets.size() + 1;
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 160, 265, 175,
-                    "Dust colours                R                                 G                                 B",
-                    "Calibri.ttf", 30 ,0, &tmh, false, true));
-    /*R*/widgets.push_back(new rGUI::SlideBar(SCREEN_W - 245, 195, 150, 25, 0, 255, &tmh, false, false));
-         widgets[widgets.size()-1]->wd_c_background = al_map_rgb(255,0,0);
-         widgets[widgets.size()-1]->wd_c_outline = al_map_rgb(100,0,0);
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 160, 265, 175,
+                    "Dust colours \nR \nG \nB",
+                    "Calibri.ttf", 30,&tmh, (  rGUI::bf_HAS_FRAME | rGUI::bf_MULTILINE | rGUI::bf_TOP)));
+    /*R*/widgets.push_back(new rGUI::SlideBar(SCREEN_W - 245, 195, 150, 25, 0, 255, &tmh, (rGUI::bf_HORIZONTAL )));
+         widgets[widgets.size()-1]->wd_theme.c_background = al_map_rgb(255,0,0);
+         widgets[widgets.size()-1]->wd_theme.c_outline = al_map_rgb(100,0,0);
          ((rGUI::SlideBar*)widgets[widgets.size()-1])->Set_value(distribution(generator));
-        widgets.push_back(new rGUI::InputField(SCREEN_W - 90, 195, 70, 25, "Calibri.ttf", &thmwh, FPS, false));
+        widgets.push_back(new rGUI::InputField(SCREEN_W - 90, 195, 70, 25, "Calibri.ttf", &thmwh, FPS));
         ((rGUI::InputField*)widgets[widgets.size()-1])->Set_text(std::to_string(((rGUI::SlideBar*)widgets[widgets.size()-2])->value));
-    /*G*/widgets.push_back(new rGUI::SlideBar(SCREEN_W - 245, 225, 150, 25, 0, 255, &tmh, false, false));
-         widgets[widgets.size()-1]->wd_c_background = al_map_rgb(0,255,0);
-         widgets[widgets.size()-1]->wd_c_outline = al_map_rgb(0,100,0);
+    /*G*/widgets.push_back(new rGUI::SlideBar(SCREEN_W - 245, 225, 150, 25, 0, 255, &tmh, (rGUI::bf_HORIZONTAL)));
+         widgets[widgets.size()-1]->wd_theme.c_background = al_map_rgb(0,255,0);
+         widgets[widgets.size()-1]->wd_theme.c_outline = al_map_rgb(0,100,0);
          ((rGUI::SlideBar*)widgets[widgets.size()-1])->Set_value(distribution(generator));
-        widgets.push_back(new rGUI::InputField(SCREEN_W - 90, 225, 70, 25, "Calibri.ttf", &thmwh, FPS, false));
+        widgets.push_back(new rGUI::InputField(SCREEN_W - 90, 225, 70, 25, "Calibri.ttf", &thmwh, FPS));
         ((rGUI::InputField*)widgets[widgets.size()-1])->Set_text(std::to_string(((rGUI::SlideBar*)widgets[widgets.size()-2])->value));
-    /*B*/widgets.push_back(new rGUI::SlideBar(SCREEN_W - 245, 255, 150, 25, 0, 255, &tmh, false, false));
-         widgets[widgets.size()-1]->wd_c_background = al_map_rgb(0,0,255);
-         widgets[widgets.size()-1]->wd_c_outline = al_map_rgb(0,0,100);
+    /*B*/widgets.push_back(new rGUI::SlideBar(SCREEN_W - 245, 255, 150, 25, 0, 255, &tmh, (rGUI::bf_HORIZONTAL)));
+         widgets[widgets.size()-1]->wd_theme.c_background = al_map_rgb(0,0,255);
+         widgets[widgets.size()-1]->wd_theme.c_outline = al_map_rgb(0,0,100);
          ((rGUI::SlideBar*)widgets[widgets.size()-1])->Set_value(distribution(generator));
-        widgets.push_back(new rGUI::InputField(SCREEN_W - 90, 255, 70, 25, "Calibri.ttf", &thmwh, FPS, false));
+        widgets.push_back(new rGUI::InputField(SCREEN_W - 90, 255, 70, 25, "Calibri.ttf", &thmwh, FPS));
         ((rGUI::InputField*)widgets[widgets.size()-1])->Set_text(std::to_string(((rGUI::SlideBar*)widgets[widgets.size()-2])->value));
     widgets.push_back(new rGUI::Button(SCREEN_W - 260, 290, 245, 40, "Add", "Calibri.ttf", &tmh));
 
     /// W & H
     int width_inpf_poz = widgets.size()+1;
-    /*w*/widgets.push_back(new rGUI::Label(SCREEN_W - 120, 390, 115, 50, "Width", "Calibri.ttf",14, 1, &tmh, false, true));
-    widgets.push_back(new rGUI::InputField(SCREEN_W - 110, 407, 100, 30, "Calibri.ttf", &thmwh, FPS, false));
+    /*w*/widgets.push_back(new rGUI::TextBox(SCREEN_W - 120, 390, 115, 50, "Width", "Calibri.ttf",14, &tmh, (rGUI::bf_TOP | rGUI::bf_HORIZONTAL_CENTER | rGUI::bf_HAS_FRAME)));
+    widgets.push_back(new rGUI::InputField(SCREEN_W - 110, 407, 100, 30, "Calibri.ttf", &thmwh, FPS));
     ((rGUI::InputField*)widgets[widgets.size()-1])->Set_text("1600");
-    /*H*/widgets.push_back(new rGUI::Label(SCREEN_W - 120, 445, 115, 50, "Height", "Calibri.ttf",14, 1, &tmh, false, true));
+    /*H*/widgets.push_back(new rGUI::TextBox(SCREEN_W - 120, 445, 115, 50, "Height", "Calibri.ttf",14, &tmh, (rGUI::bf_TOP | rGUI::bf_HORIZONTAL_CENTER | rGUI::bf_HAS_FRAME)));
      int hight_inpf_poz = widgets.size();
-     widgets.push_back(new rGUI::InputField(SCREEN_W - 110, 462, 100, 30, "Calibri.ttf", &thmwh, FPS, false));
+     widgets.push_back(new rGUI::InputField(SCREEN_W - 110, 462, 100, 30, "Calibri.ttf", &thmwh, FPS));
     ((rGUI::InputField*)widgets[widgets.size()-1])->Set_text("900");
 
     ///Nebulas Colors scba
     nebullacolor_scba = widgets.size();
-    widgets.push_back(new rGUI::ScrollableArea(SCREEN_W - 270, 390, 130, 185, 130, 185, &tmh, 15));
+    widgets.push_back(new rGUI::ScrollableArea(SCREEN_W - 270, 390, 130, 185, 130, 185, &tmh, 15, (rGUI::bf_HORIZONTAL_SCROLL | rGUI::bf_VERTICAL_SCROLL)));
 
     ///Progressbar
     thmwh.roundx = 3;
@@ -212,21 +211,21 @@ int main(int argc, char **argv)
     thmwh.c_outline = al_map_rgb(225,225,225);
     thmwh.c_background = al_map_rgb(255,255,255);
     thmwh.c_text = al_map_rgb(0,50,200);
-    pbar = new rGUI::ProgressBar(20, (SCREEN_H-40)/2.0f, 580, 40, 0, &thmwh, false);
+    pbar = new rGUI::ProgressBar(20, (SCREEN_H-40)/2.0f, 580, 40, 0, &thmwh);
 
     ///Mass generating
     thmwh.c_outline = al_map_rgb(150,150,150);
     thmwh.roundx = 0;
     thmwh.roundy = 0;
     int massgencheckb = widgets.size() +3;
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 345,265, 35, "","Calibri.ttf",0,&tmh, false ));
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 345,90, 17, "Mass generate","Calibri.ttf",0,&tmh, false));
-    widgets.push_back(new rGUI::Label(SCREEN_W - 270, 362,90, 18, "Randomize","Calibri.ttf",0,&tmh, false));
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 345,265, 35, "","Calibri.ttf",0,&tmh, (rGUI::bf_HAS_FRAME) ));
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 345,90, 17, "Mass generate","Calibri.ttf",100,&tmh, (rGUI::bf_HAS_FRAME | rGUI::bf_RESIZE_CONTENT)));
+    widgets.push_back(new rGUI::TextBox(SCREEN_W - 270, 362,90, 18, "Randomize","Calibri.ttf",100,&tmh, (rGUI::bf_HAS_FRAME | rGUI::bf_RESIZE_CONTENT)));
     widgets.push_back(new rGUI::CheckBox(SCREEN_W - 180, 345, 17, 17, &thmwh, false));
     widgets.push_back(new rGUI::CheckBox(SCREEN_W - 180, 362, 17, 18, &thmwh, false));
     thmwh.roundx = 3;
     thmwh.roundy = 3;
-    widgets.push_back(new rGUI::InputField(SCREEN_W - 150, 350, 60, 25, "Calibri.ttf", &thmwh, FPS, false));
+    widgets.push_back(new rGUI::InputField(SCREEN_W - 150, 350, 60, 25, "Calibri.ttf", &thmwh, FPS));
     ((rGUI::InputField*)(widgets[widgets.size()-1]))->Set_text("numb");
     widgets.push_back(new rGUI::Button(SCREEN_W - 80, 350, 70, 25, "Save to", "Calibri.ttf", &tmh));
     std::string savepath;
@@ -235,8 +234,8 @@ int main(int argc, char **argv)
     int bitmapscbapoz = widgets.size();
     ALLEGRO_BITMAP *space = nullptr;
     SpaceGenerator *spg = nullptr;
-    widgets.push_back(new rGUI::ScrollableArea(10,10, SCREEN_W - 300, SCREEN_H - 35, 1000, 1000, &tmh, 15));
-    ((rGUI::ScrollableArea*)(widgets[widgets.size()-1]))->zoomable = true;
+    widgets.push_back(new rGUI::ScrollableArea(10,10, SCREEN_W - 300, SCREEN_H - 35, 1000, 1000, &tmh, 15,
+                                    (rGUI::bf_ZOOMABLE | rGUI::bf_HORIZONTAL_SCROLL | rGUI::bf_VERTICAL_SCROLL)));
 
     float scale = 1.0f;
     while(1)
@@ -244,8 +243,7 @@ int main(int argc, char **argv)
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
-        al_get_mouse_state(rGUI::mouse_state);
-        al_get_keyboard_state(rGUI::keyboard_state);
+        rGUI::GetStatesAdnEvents(ev);
 
         if(ev.type == ALLEGRO_EVENT_TIMER)
         {
@@ -300,11 +298,10 @@ int main(int argc, char **argv)
             al_acknowledge_resize(display);
         }
 
-        float aaa = 1;
 
         for(int a = 0;a < (int)widgets.size();a++)
         {
-            widgets[a]->Input(ev, aaa, aaa);
+            widgets[a]->Input();
         }
         if(widgets[generate_button_poz]->wd_md->md_just_clicked == true)
         {
@@ -312,7 +309,7 @@ int main(int argc, char **argv)
             for(int a = 1;a < ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();a+=2)
             {
                 nebscbacols.push_back( ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->
-                widgets[a-1]->wd_c_background);
+                widgets[a-1]->wd_theme.c_background);
             }
             if(spg != nullptr)
             {
@@ -379,7 +376,8 @@ int main(int argc, char **argv)
                         ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.clear();
                     }
 
-                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0, space, &tmh, false));
+                    ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0,
+                                                    al_get_bitmap_width(space),al_get_bitmap_height(space), space, &tmh,0));
                     ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size()-1]->
                     wd_md->md_active = false;
                     ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->I_added_new_widgets();
@@ -421,7 +419,8 @@ int main(int argc, char **argv)
                     ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.clear();
                 }
 
-                ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0, space, &tmh, false));
+                ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.push_back(new rGUI::BitmapButton(0,0,
+                                    al_get_bitmap_width(space),al_get_bitmap_height(space), space, &tmh, 0));
                 ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size()-1]->
                 wd_md->md_active = false;
                 ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->I_added_new_widgets();
@@ -431,10 +430,10 @@ int main(int argc, char **argv)
         {
             int njk = ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();
             ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.push_back(new rGUI::Widget(5 ,
-                                                                        10 + 30*floor(njk/2),55,20,&tmh,false));
+                                                                        10 + 30*floor(njk/2),55,20,&tmh));
             ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->
-                widgets[((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size()-1]->wd_c_background =
-                widgets[slidebar_R+6]->wd_c_background;
+                widgets[((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size()-1]->wd_theme.c_background =
+                widgets[slidebar_R+6]->wd_theme.c_background;
 
             ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.push_back(new rGUI::Button(70,
                                                         10 + 30*floor(njk/2),50,20, "Remove","Calibri.ttf",&tmh));
@@ -536,10 +535,10 @@ int main(int argc, char **argv)
 
             al_clear_to_color(al_map_rgb(255,255,255));
 
-            widgets[slidebar_R]->wd_c_background = al_map_rgb( ((rGUI::SlideBar*)widgets[slidebar_R])->value,0,0);
-            widgets[slidebar_R+2]->wd_c_background = al_map_rgb( 0,((rGUI::SlideBar*)widgets[slidebar_R+2])->value,0);
-            widgets[slidebar_R+4]->wd_c_background = al_map_rgb( 0,0,((rGUI::SlideBar*)widgets[slidebar_R+4])->value);
-            widgets[slidebar_R+6]->wd_c_background = al_map_rgb( ((rGUI::SlideBar*)widgets[slidebar_R])->value,
+            widgets[slidebar_R]->wd_theme.c_background = al_map_rgb( ((rGUI::SlideBar*)widgets[slidebar_R])->value,0,0);
+            widgets[slidebar_R+2]->wd_theme.c_background = al_map_rgb( 0,((rGUI::SlideBar*)widgets[slidebar_R+2])->value,0);
+            widgets[slidebar_R+4]->wd_theme.c_background = al_map_rgb( 0,0,((rGUI::SlideBar*)widgets[slidebar_R+4])->value);
+            widgets[slidebar_R+6]->wd_theme.c_background = al_map_rgb( ((rGUI::SlideBar*)widgets[slidebar_R])->value,
                                                                  ((rGUI::SlideBar*)widgets[slidebar_R+2])->value,
                                                                  ((rGUI::SlideBar*)widgets[slidebar_R+4])->value);
 
@@ -559,8 +558,7 @@ int main(int argc, char **argv)
     }
     widgets.clear();
 
-    delete rGUI::keyboard_state;
-    delete rGUI::mouse_state;
+    rGUI::End();
 
     /*if(space != nullptr)
         al_destroy_bitmap(space);*/
