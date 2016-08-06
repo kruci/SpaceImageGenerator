@@ -104,6 +104,10 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
         //someshit(x, y, rand() % (w*h), al_premul_rgba(1+rand()%255, 1+rand()%255,1+rand()%255, 1+rand()%25));
     }
 
+    Stars *strs = new Stars(w,h);
+    int b1,b2,b3;
+    al_get_blender(&b1,&b2,&b3);
+
     int r = 0;
     for(int a = 0;a < w;a++)
     {
@@ -115,37 +119,13 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
             }
             if(Proc(bs) == true) //255,255,204
             {
-                r = 1+ rand() % 2;
-                al_draw_filled_ellipse(a,b, 1 + rand() %2, 1 + rand() %2,clWhite);
-                al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r - rand()%2, al_map_rgb(255,255,255));
-                //glow
-                al_draw_filled_circle(a, b, r + 1+rand()%5, al_premul_rgba(255,255,255, 1 + rand() % 20));
-
-                int rng = rand() % 3;
-                if(rng == 0)
-                {
-                    r = rand() % 3;
-                    al_draw_filled_circle(a, b, r, al_premul_rgba(255,255,150+rand()%10, 230 +rand()%15));
-                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4,
-                                          al_premul_rgba(255,255,50+rand()%200, 230 +rand()%15));
-                }
-                else if(rng == 1)
-                {
-                    r = rand() % 3; //255, 204, 153
-                    al_draw_filled_circle(a, b, r, al_premul_rgba(255,69,0, 100 +rand()%15));
-                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4,
-                                          al_premul_rgba(255,69,0, 100 +rand()%15));
-                }
-                else if(rng == 2)
-                {
-                    r = rand() % 3; //304, 229, 255
-                    al_draw_filled_circle(a, b, r, al_premul_rgba(135,206,250, 230 +rand()%15));
-                    al_draw_filled_circle(a -1 + rand() % 3, b -1 + rand() % 3, r- rand()%4,
-                                          al_premul_rgba(135,206,250, 230 +rand()%15));
-                }
+                strs->sv.push_back(new Stars::star(a, b, (float)(rand()%1000)/1000.0 +0.40, al_map_rgb(rand()%200 +55,rand()%200 +55,rand()%200 +55)));
             }
         }
     }
+    al_draw_bitmap(strs->Render(), 0,0,0);
+    al_set_blender(b1,b2,b3);
+    delete strs;
     //trash = rand() % 3;
     /*for(int c = 0; c < 1; c++)
     {
