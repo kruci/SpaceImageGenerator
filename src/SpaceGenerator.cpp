@@ -21,13 +21,19 @@ SpaceGenerator::~SpaceGenerator()
 {
     if(bmp != nullptr)
         al_destroy_bitmap(bmp);
+
+    for (int i = 0; i < w; ++i)
+    {
+        delete[] isfree[i];
+    }
+    delete[] isfree;
 }
 
 void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
 {
-    for (int a = 0; a < w; a++)
+    for (int a = w-1; a>= 0; --a)
     {
-            for (int b = 0; b < h; b++)
+            for (int b = h-1; b>= 0; --b)
             {
                 isfree[a][b] = true;
             }
@@ -69,7 +75,7 @@ void SpaceGenerator::someshit(int x, int y, long size_pixels, ALLEGRO_COLOR col)
             al_put_pixel(x, y, col);
             //al_draw_filled_circle(x,y,3, col);
             isfree[x][y] = false;
-            size_pixels--;
+            --size_pixels;
         }
     }
 }
@@ -94,7 +100,7 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     }
     //stars
     int trash = rand() % max_bckground_it + min_bckground_it;
-    for(int c = 0; c < trash; c++)
+    for(int c = 0; c < trash; ++c)
     {
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
 
@@ -108,10 +114,10 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     int b1,b2,b3;
     al_get_blender(&b1,&b2,&b3);
 
-    int r = 0;
-    for(int a = 0;a < w;a++)
+    //int r = 0;
+    for(int a = 0;a < w;++a)
     {
-        for(int b = 0;b < h;b++)
+        for(int b = 0;b < h;++b)
         {
             if(Proc(ss) == true)
             {
@@ -137,14 +143,14 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
     }*/
 
     //nebs
-    for(int c = 0; c < nebc.size(); c++)
+    for(int c = 0; c < (int)nebc.size(); ++c)
     {
         signed int x = w_distribution(rndgenerator), y = h_distribution(rndgenerator);
-        signed int xx, yy;
-        for(int t = 0;t < (float)(w*h)*((float)neb/100.0f);t++)
+        //signed int xx, yy;
+        for(int t = 0;t < (float)(w*h)*((float)neb/100.0f); ++t)
         {
-            xx = -1 + rand()%3;
-            yy = -1 + rand()%3;
+            /*xx = -1 + rand()%3;
+            yy = -1 + rand()%3;*/
             //al_draw_filled_circle(x, y, 1,al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
             al_put_blended_pixel(x, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
 
@@ -152,8 +158,10 @@ ALLEGRO_BITMAP* SpaceGenerator::Generate()
             al_put_blended_pixel(x+1, y, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
             al_put_blended_pixel(x, y-1, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
             al_put_blended_pixel(x, y+1, al_premul_rgba_f(nebc[c].r, nebc[c].g, nebc[c].b, a_distribution(rndgenerator)));
-            x += xx;
-            y += yy;
+            /*x += xx;
+            y += yy;*/
+            x += -1 + rand()%3;
+            y += -1 + rand()%3;;
         }
         if(Progresscallback != nullptr)
         {

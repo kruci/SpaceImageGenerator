@@ -23,9 +23,9 @@ private:
 public:
     int w, h;
     int ss, bs, neb;
-    int max_bckground_it = 10;
-    int min_bckground_it = 0;
     std::vector<ALLEGRO_COLOR> nebc;
+    int max_bckground_it = 3;
+    int min_bckground_it = 0;
     ALLEGRO_BITMAP *bmp = nullptr;
 
     void (*Progresscallback)(int a) = nullptr;
@@ -120,7 +120,7 @@ public:
         al_set_shader_float("sh", h);
         al_set_shader_float("radius", 0);
 
-        for(int a = 0;a < sv.size();a++)
+        for(int a = 0;a < (int)sv.size();++a)
         {
             lightpos[0] = sv[a]->x;
             lightpos[1] = sv[a]->y;
