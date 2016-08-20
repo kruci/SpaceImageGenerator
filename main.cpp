@@ -131,6 +131,7 @@ int main(int argc, char **argv)
     tmh.c_text = al_map_rgb(255,255,255);
     tmh.c_outline = al_map_rgb(150,150,150);
     tmh.c_background = al_map_rgb(200,200,200);
+    tmh.c_movablepart = al_map_rgb(190,190,190);
     tmh.c_clicking = al_map_rgba(0,0,0,125);
     tmh.added_thickness = 1;
     tmh.roundx = 0;
@@ -237,7 +238,7 @@ int main(int argc, char **argv)
     widgets.push_back(new rGUI::ScrollableArea(10,10, SCREEN_W - 300, SCREEN_H - 35, 1000, 1000, &tmh, 15,
                                     (rGUI::bf_ZOOMABLE | rGUI::bf_HORIZONTAL_SCROLL | rGUI::bf_VERTICAL_SCROLL)));
 
-    float scale = 1.0f;
+    //float scale = 1.0f;
     while(1)
     {
         ALLEGRO_EVENT ev;
@@ -306,7 +307,7 @@ int main(int argc, char **argv)
         if(widgets[generate_button_poz]->wd_md->md_just_clicked == true)
         {
             nebscbacols.clear();
-            for(int a = 1;a < ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();a+=2)
+            for(int a = 1;a < (int)((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();a+=2)
             {
                 nebscbacols.push_back( ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->
                 widgets[a-1]->wd_theme.c_background);
@@ -369,7 +370,7 @@ int main(int argc, char **argv)
 
                     if(((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size() > 0)
                     {
-                        for(int h = 0; h < ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size(); h++)
+                        for(int h = 0; h < (int)((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size(); h++)
                         {
                             delete ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[h];
                         }
@@ -412,7 +413,7 @@ int main(int argc, char **argv)
 
                 if(((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size() > 0)
                 {
-                    for(int h = 0; h < ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size(); h++)
+                    for(int h = 0; h < (int)((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets.size(); h++)
                     {
                         delete ((rGUI::ScrollableArea*)widgets[bitmapscbapoz])->widgets[h];
                     }
@@ -503,7 +504,7 @@ int main(int argc, char **argv)
             }
         }
 
-        for(int a = 1;a < ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();)
+        for(int a = 1;a < (int)((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();)
         {
             if(((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets[a]->wd_md->md_just_clicked == true)
             {
@@ -513,7 +514,7 @@ int main(int argc, char **argv)
                     ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.begin()+a-1,
                     ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.begin()+a+1);
 
-                for(int m = a ; m < ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();m+=2)
+                for(int m = a ; m < (int)((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets.size();m+=2)
                 {
                     ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets[m-1]->orig_y1 =
                         ((rGUI::ScrollableArea*)widgets[nebullacolor_scba])->widgets[m]->orig_y1 = 10 + 30*floor(m/2);
